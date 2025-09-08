@@ -81,8 +81,8 @@ struct CNode* delAtBeg(struct CNode* head) {
         last = last->next;
 
     head = head->next;
-    last->next = head;
     free(temp);
+    last->next = head;
     return head;
 }
 
