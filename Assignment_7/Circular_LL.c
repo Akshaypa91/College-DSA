@@ -14,8 +14,6 @@ struct CNode* createNode(int data) {
     return newNode;
 }
 
-/* ---------------- INSERT OPERATIONS ---------------- */
-
 // Insert at Beginning
 struct CNode* insAtBeg(struct CNode* head, int data) {
     struct CNode* newNode = createNode(data);
@@ -62,8 +60,6 @@ struct CNode* insAtPos(struct CNode* head, int data, int pos) {
 
     return head;
 }
-
-/* ---------------- DELETE OPERATIONS ---------------- */
 
 // Delete at Beginning
 struct CNode* delAtBeg(struct CNode* head) {
@@ -159,6 +155,46 @@ void countLL(struct CNode* head) {
     printf("Count = %d\n", cnt);
 }
 
+// Search an element in circular linked list
+void searchLL(struct CNode* head, int key) {
+	if (head == NULL) {
+		printf("List is empty\n");
+		return;
+	}
+
+	struct CNode* temp = head;
+	int pos = 1;
+
+	do {
+		if (temp->data == key) {
+			printf("Element %d found at position %d\n", key, pos);
+			return;
+		}
+		temp = temp->next;
+		pos++;
+	} while (temp != head);
+
+	printf("Element %d not found in the list\n", key);
+}
+
+// Helper recursive function
+void reverseTraverseHelper(struct CNode* head, struct CNode* current) {
+	if (current->next != head) {
+		reverseTraverseHelper(head, current->next);
+	}
+	printf("%d -> ", current->data);
+}
+// Traverse in reverse order
+void reverseTraverse(struct CNode* head) {
+	if (head == NULL) {
+		printf("List is empty\n");
+		return;
+	}
+	printf("Reverse: ");
+	reverseTraverseHelper(head, head);
+	printf("(back to head)\n");
+}
+
 int main() {
     struct CNode* head = NULL;
 
@@ -185,6 +221,14 @@ int main() {
     printList(head);
 
     countLL(head);
+
+    searchLL(head, 20);
+	searchLL(head, 10);
+
+    head = insAtBeg(head, 50);
+    head = insAtEnd(head, 70);
+
+    reverseTraverse(head);
 
     return 0;
 }
