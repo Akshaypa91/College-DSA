@@ -2,6 +2,18 @@
 using namespace std;
 
 int main() {
-    HashSet<Character> rows = new HashSet[];
+    int t;
+    cin >> t;
+
+    while(t--) {
+        int n;
+        cin >> n;
+        int sum = 0;
+        for(int i = 0; i < n; i++) {
+            sum += i;
+        }
+        cout << sum;
+    }
+
     return 0;
 }
