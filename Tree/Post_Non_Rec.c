@@ -51,18 +51,21 @@ struct Node* newNode(int val) {
 	return node;
 }
 
-// Non-recursive inorder traversal
-void inorderNonRec(struct Node* root) {
-	struct NodeStack* stack = NULL;
-	struct Node* temp = root;
-	while (temp != NULL || !isEmpty(stack)) {
-		while (temp != NULL) {
-			pushNode(&stack, temp);
-			temp = temp->left;
-		}
-		temp = popNode(&stack);
-		printf("%d ", temp->data);
-		temp = temp->right;
+// Non-recursive postorder traversal
+void postorderNonRec(struct Node* root) {
+	if (!root) return;
+	struct NodeStack* stack1 = NULL;
+	struct NodeStack* stack2 = NULL;
+	pushNode(&stack1, root);
+	while (!isEmpty(stack1)) {
+		struct Node* node = popNode(&stack1);
+		pushNode(&stack2, node);
+		if (node->left) pushNode(&stack1, node->left);
+		if (node->right) pushNode(&stack1, node->right);
+	}
+	while (!isEmpty(stack2)) {
+		struct Node* node = popNode(&stack2);
+		printf("%c ", node->data);
 	}
 }
 

@@ -14,14 +14,10 @@ struct NodeStack {
 
 // Push operation
 void pushNode(struct NodeStack** top, struct Node* node) {
-	struct NodeStack* newStackNode = (struct NodeStack*)malloc(sizeof(struct NodeStack));
-	if (!newStackNode) {
-		fprintf(stderr, "Memory allocation failed\n");
-		exit(EXIT_FAILURE);
-	}
-	newStackNode->treeNode = node;
-	newStackNode->next = *top;
-	*top = newStackNode;
+	struct NodeStack* newNode = (struct NodeStack*)malloc(sizeof(struct NodeStack));
+	newNode->treeNode = node;
+	newNode->next = *top;
+	*top = newNode;
 }
 
 // Check empty
@@ -42,27 +38,23 @@ struct Node* popNode(struct NodeStack** top) {
 // Create new tree node
 struct Node* newNode(int val) {
 	struct Node* node = (struct Node*)malloc(sizeof(struct Node));
-	if (!node) {
-		fprintf(stderr, "Memory allocation failed\n");
-		exit(EXIT_FAILURE);
-	}
 	node->data = val;
 	node->left = node->right = NULL;
 	return node;
 }
 
-// Non-recursive inorder traversal
-void inorderNonRec(struct Node* root) {
+// Non-recursive preorder traversal
+void preorderNonRec(struct Node* root) {
+	if (!root) return;
 	struct NodeStack* stack = NULL;
-	struct Node* temp = root;
-	while (temp != NULL || !isEmpty(stack)) {
-		while (temp != NULL) {
-			pushNode(&stack, temp);
-			temp = temp->left;
-		}
-		temp = popNode(&stack);
-		printf("%d ", temp->data);
-		temp = temp->right;
+	pushNode(&stack, root);
+
+	while (!isEmpty(stack)) {
+		struct Node* node = popNode(&stack);
+		printf("%d ", node->data);
+
+		if (node->right) pushNode(&stack, node->right);
+		if (node->left) pushNode(&stack, node->left);
 	}
 }
 
@@ -74,15 +66,16 @@ int main() {
 	     / \
 	    4   5
 	*/
+
 	struct Node* root = newNode(1);
 	root->left = newNode(2);
 	root->right = newNode(3);
 	root->left->left = newNode(4);
 	root->left->right = newNode(5);
 
-	printf("Inorder traversal: ");
-	inorderNonRec(root);  // Output: 4 2 5 1 3
-	printf("\n");
+	printf("Preorder traversal: ");
+	preorderNonRec(root);  
+	// Output: 1 2 4 5 3
 
 	return 0;
 }

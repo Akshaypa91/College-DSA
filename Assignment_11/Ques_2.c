@@ -26,10 +26,10 @@ Node* insert(Node* root, int data) {
 
 // Find minimum node in BST (used in delete)
 Node* minValueNode(Node* node) {
-	Node* current = node;
-	while (current && current->left != NULL)
-		current = current->left;
-	return current;
+	Node* temp = node;
+	while (temp && temp->left != NULL)
+		temp = temp->left;
+	return temp;
 }
 
 // Delete a node

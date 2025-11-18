@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Level Order Traversal Visualizer</title>
+<style>
+	body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; }
+	h1 { margin: 0 0 12px; font-size: 20px; }
+	#container { display: flex; gap: 20px; align-items:flex-start; }
+	.tree, .queue, .output { padding: 12px; border: 1px solid #ddd; border-radius: 8px; min-width: 180px; }
+	.node { display:inline-block; width:36px; height:36px; line-height:36px; text-align:center; border-radius:50%; border:1px solid #aaa; margin:6px; }
+	.node.level { background:#f8f9fa; }
+	.node.current { background: #ffd966; border-color:#c68b00; box-shadow: 0 0 8px rgba(198,139,0,0.15); }
+	.node.visited { background:#d4f0d4; border-color:#2e8b57; }
+	.queue-list { display:flex; gap:8px; flex-wrap:wrap; min-height:60px; align-items:center; }
+	.queue-item { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; border:1px solid #aaa; }
+	.controls { margin-top:12px; display:flex; gap:8px; }
+	button { padding:8px 12px; border-radius:6px; border:1px solid #ccc; cursor:pointer; background:#fff; }
+	.small { font-size:13px; color:#555; margin-top:8px; }
+</style>
+</head>
+<body>
+	<h1>Level Order Traversal Visualizer</h1>
+	<div id="container">
+		<div class="tree">
+			<strong>Tree</strong>
+			<div id="tree-svg" style="margin-top:12px;">
+				<!-- simple visual layout -->
+				<div style="text-align:center;">
+					<span id="n1" class="node level">1</span>
+				</div>
+				<div style="display:flex; justify-content:center; gap:80px; margin-top:8px;">
+					<span id="n2" class="node level">2</span>
+					<span id="n3" class="node level">3</span>
+				</div>
+				<div style="display:flex; justify-content:center; gap:40px; margin-top:8px;">
+					<div style="width:120px; text-align:center;">
+						<span id="n4" class="node level">4</span>
+					</div>
+					<div style="width:120px; text-align:center;">
+						<span id="n5" class="node level">5</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="queue">
+			<strong>Queue (front → back)</strong>
+			<div id="queue" class="queue-list" style="margin-top:12px;"></div>
+			<div class="small">Current queue is shown here as nodes are enqueued/dequeued.</div>
+		</div>
+
+		<div class="output">
+			<strong>Output (visited)</strong>
+			<div id="out" style="margin-top:12px; min-height:36px;"></div>
+			<div class="small">Visited nodes appear left→right as they are dequeued.</div>
+		</div>
+	</div>
+
+	<div class="controls">
+		<button id="start">Start</button>
+		<button id="step">Step</button>
+		<button id="reset">Reset</button>
+		<label style="align-self:center; margin-left:8px;">Delay(ms):
+			<input id="delay" type="number" value="800" style="width:80px; margin-left:6px;" />
+		</label>
+	</div>
+
+<script>
+	// Build the same tree used in your C program
+	const nodes = {
+		1: { val:1, left:2, right:3 },
+		2: { val:2, left:4, right:5 },
+		3: { val:3, left:null, right:null },
+		4: { val:4, left:null, right:null },
+		5: { val:5, left:null, right:null }
+	};
+
+	let queue = [];
+	let visited = [];
+	let timer = null;
+	let running = false;
+
+	function renderQueue() {
+		const qdiv = document.getElementById('queue');
+		qdiv.innerHTML = '';
+		queue.forEach(n => {
+			const el = document.createElement('div');
+			el.className = 'queue-item';
+			el.textContent = n;
+			qdiv.appendChild(el);
+		});
+	}
+
+	function renderOutput() {
+		document.getElementById('out').textContent = visited.join(' ');
+	}
+
+	function resetNodes() {
+		['n1','n2','n3','n4','n5'].forEach(id=>{
+			const el = document.getElementById(id);
+			el.className = 'node level';
+		});
+	}
+
+	function highlightCurrent(val) {
+		resetNodes();
+		if (val !== null) {
+			const el = document.getElementById('n'+val);
+			if (el) el.className = 'node current';
+		}
+		visited.forEach(v=>{
+			const e = document.getElementById('n'+v);
+			if (e) e.className = 'node visited';
+		});
+	}
+
+	function stepOnce() {
+		// If queue empty and not started, initialize
+		if (queue.length === 0 && visited.length === 0) {
+			queue.push(1); // root
+			renderQueue();
+			highlightCurrent(null);
+			return;
+		}
+		if (queue.length === 0) {
+			// finished
+			highlightCurrent(null);
+			return;
+		}
+		// Dequeue
+		const curr = queue.shift();
+		visited.push(curr);
+		highlightCurrent(curr);
+		renderQueue();
+		renderOutput();
+
+		// Enqueue children (if exist)
+		const n = nodes[curr];
+		if (n && n.left) {
+			queue.push(n.left);
+		}
+		if (n && n.right) {
+			queue.push(n.right);
+		}
+		renderQueue();
+	}
+
+	document.getElementById('start').addEventListener('click', ()=>{
+		if (running) return;
+		running = true;
+		const delay = Math.max(50, parseInt(document.getElementById('delay').value) || 500);
+		// initialize if first time
+		if (queue.length === 0 && visited.length === 0) queue.push(1);
+		renderQueue();
+		timer = setInterval(()=>{
+			if (queue.length === 0) {
+				// if everything visited, stop
+				clearInterval(timer);
+				running = false;
+				highlightCurrent(null);
+				return;
+			}
+			stepOnce();
+		}, delay);
+	});
+
+	document.getElementById('step').addEventListener('click', ()=>{
+		if (running) return;
+		// initialize if first time
+		if (queue.length === 0 && visited.length === 0) queue.push(1);
+		stepOnce();
+	});
+
+	document.getElementById('reset').addEventListener('click', ()=>{
+		clearInterval(timer);
+		running = false;
+		queue = [];
+		visited = [];
+		renderQueue();
+		renderOutput();
+		resetNodes();
+	});
+
+	// initial render
+	renderQueue();
+	renderOutput();
+	resetNodes();
+</script>
+</body>
+</html>
