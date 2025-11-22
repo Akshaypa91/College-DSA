@@ -25,6 +25,7 @@ struct CNode* insAtBeg(struct CNode* head, int data) {
         temp = temp->next;
 
     newNode->next = head;
+    head = newNode;
     temp->next = newNode;
     return newNode; // new head
 }

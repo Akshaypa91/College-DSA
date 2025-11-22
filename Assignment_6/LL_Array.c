@@ -52,17 +52,19 @@ void delete_beginning() {
 }
 
 void delete_after(int position) {
-    if (head == -1) return;
+	if (head == -1) return;
 
-    int temp = head;
-    for (int i = 1; i <= position && temp != -1; i++) {
-        temp = next[temp];
-    }
-    if (temp == -1 || next[temp] == -1) {
-        printf("Position out of range\n");
-        return;
-    }
-    next[temp] = next[next[temp]];
+	int temp = head;
+	for (int i = 1; i < position && temp != -1; i++) {
+		temp = next[temp];
+	}
+	if (temp == -1 || next[temp] == -1) {
+		printf("Position out of range\n");
+		return;
+	}
+
+	int del = next[temp];
+	next[temp] = next[del];
 }
 
 void print_list() {
