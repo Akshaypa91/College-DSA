@@ -162,28 +162,28 @@ int main(){
     for(int i = 1; i <= x; i++) insert_node();
     print_list();
 
-    printf("Enter no of nodes do you want to delete : ");
-    scanf("%d",&x);
-    for(int i = 1; i <= x; i++) delete_node();
-    print_list();
+    // printf("Enter no of nodes do you want to delete : ");
+    // scanf("%d",&x);
+    // for(int i = 1; i <= x; i++) delete_node();
+    // print_list();
 
-    printf("Enter no of edges do you want to insert : ");
-    scanf("%d",&x);
-    for(int i = 1; i <= x; i++){
-        printf("Enter source and destination : ");
-        scanf("%d %d",&u,&v);
-        insert_edge(u,v);
-    }
-    print_list();
+    // printf("Enter no of edges do you want to insert : ");
+    // scanf("%d",&x);
+    // for(int i = 1; i <= x; i++){
+    //     printf("Enter source and destination : ");
+    //     scanf("%d %d",&u,&v);
+    //     insert_edge(u,v);
+    // }
+    // print_list();
 
-    printf("Enter no of edges do you want to delete : ");
-    scanf("%d",&x);
-    for(int i = 1; i <= x; i++){
-        printf("Enter source and destination : ");
-        scanf("%d %d",&u,&v);
-        delete_edge(u,v);
-    }
-    print_list();
+    // printf("Enter no of edges do you want to delete : ");
+    // scanf("%d",&x);
+    // for(int i = 1; i <= x; i++){
+    //     printf("Enter source and destination : ");
+    //     scanf("%d %d",&u,&v);
+    //     delete_edge(u,v);
+    // }
+    // print_list();
 
     return 0;
 }

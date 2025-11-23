@@ -22,6 +22,16 @@ void createGraph(int vertices) {
     printf("Undirected Graph created with %d vertices.\n", n);
 }
 
+void insertEdge(int src, int dest) {
+    if (src > n || dest > n || src < 0 || dest < 0) {
+        printf("Invalid node number!\n");
+        return;
+    }
+    adj[src][dest] = 1;
+    adj[dest][src] = 1;
+    printf("Edge inserted between %d and %d.\n", src, dest);
+}
+
 void insertNode() {
     if (n == MAX - 1) {
         printf("Graph is full! Cannot insert more nodes.\n");
@@ -33,16 +43,6 @@ void insertNode() {
         adj[n][i] = 0;
     }
     printf("Node %d added successfully.\n", n);
-}
-
-void insertEdge(int src, int dest) {
-    if (src > n || dest > n || src < 0 || dest < 0) {
-        printf("Invalid node number!\n");
-        return;
-    }
-    adj[src][dest] = 1;
-    adj[dest][src] = 1;
-    printf("Edge inserted between %d and %d.\n", src, dest);
 }
 
 void deleteEdge(int src, int dest) {
@@ -111,7 +111,7 @@ int main() {
     printf("Enter number of edges: ");
     scanf("%d", &edges);
 
-    printf("Enter edges (source destination):\n");
+    printf("Enter edges (source & destination):\n");
     for (int i = 1; i <= edges; i++) {
         printf("Edge %d: ", i);
         scanf("%d %d", &src, &dest);
@@ -134,23 +134,23 @@ int main() {
     insertEdge(src, dest);
     displayGraph();
 
-    printf("\nEnter node to delete: ");
-    scanf("%d", &node);
-    deleteNode(node);
-    displayGraph();
+    // printf("\nEnter node to delete: ");
+    // scanf("%d", &node);
+    // deleteNode(node);
+    // displayGraph();
 
-    printf("\nEnter source and destination to delete edge: ");
-    scanf("%d %d", &src, &dest);
-    deleteEdge(src, dest);
-    displayGraph();
+    // printf("\nEnter source and destination to delete edge: ");
+    // scanf("%d %d", &src, &dest);
+    // deleteEdge(src, dest);
+    // displayGraph();
 
-    printf("\nEnter node to find: ");
-    scanf("%d", &node);
-    findNode(node);
+    // printf("\nEnter node to find: ");
+    // scanf("%d", &node);
+    // findNode(node);
 
-    printf("\nEnter source and destination to find edge: ");
-    scanf("%d %d", &src, &dest);
-    findEdge(src, dest);
+    // printf("\nEnter source and destination to find edge: ");
+    // scanf("%d %d", &src, &dest);
+    // findEdge(src, dest);
 
     return 0;
 }
