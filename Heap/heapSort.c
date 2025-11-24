@@ -9,8 +9,8 @@ void swap(int *a, int *b) {
 // Heapify function (Max Heap)
 void heapify(int arr[], int n, int i) {
 	int largest = i;       // Assume root is largest
-	int left = 2 * i + 1;  // Left child
-	int right = 2 * i + 2; // Right child
+	int left = 2 * i;  // Left child
+	int right = 2 * i + 1; // Right child
 
 	// If left child is larger
 	if (left < n && arr[left] > arr[largest])

@@ -31,17 +31,16 @@ void insertMax(int value) {
 
 // Delete maximum (root)
 int deleteMax() {
-	if (sizeMax <= 0) return -1;
+	if (sizeMax <= 1) return -1;
 
-	int root = maxHeap[0];
-	maxHeap[0] = maxHeap[sizeMax - 1];
+	int root = maxHeap[1];
+	maxHeap[1] = maxHeap[sizeMax - 1];
 	sizeMax--;
 
-	// Heapify Down
-	int i = 0;
+	int i = 1;
 	while (1) {
-		int left = 2 * i + 1;
-		int right = 2 * i + 2;
+		int left = 2 * i;
+		int right = 2 * i + 1;
 		int largest = i;
 
 		if (left < sizeMax && maxHeap[left] > maxHeap[largest])
